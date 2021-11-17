@@ -30,7 +30,10 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @ServletComponentScan
 @EnableScheduling
 public class Nacos {
-    
+    /**
+     * 明杰学习研究分支，直接点击Maven 中的 Alibaba NACOS xxxx-SHAPSHOP -> complie 自动编译全部。
+     * @param args
+     */
     public static void main(String[] args) {
         SpringApplication.run(Nacos.class, args);
     }
