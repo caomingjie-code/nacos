@@ -509,12 +509,9 @@ public class UpgradeOpsController {
         String cluster = WebUtils.optional(request, CommonParams.CLUSTER_NAME, UtilsAndCommons.DEFAULT_CLUSTER_NAME);
         String ip = WebUtils.required(request, "ip");
         int port = Integer.parseInt(WebUtils.required(request, "port"));
-        
-<<<<<<< HEAD
+
         Instance instance = getInstanceOperator(ver)
-=======
-        com.alibaba.nacos.api.naming.pojo.Instance instance = getInstanceOperator(ver)
->>>>>>> 8b88eaa69f6a74e379f879926dd2b8bf762d795e
+
                 .getInstance(namespaceId, serviceName, cluster, ip, port);
         ObjectNode result = JacksonUtils.createEmptyJsonNode();
         result.put("service", serviceName);
