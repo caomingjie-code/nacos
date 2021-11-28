@@ -18,7 +18,7 @@ package com.alibaba.nacos.config.server.utils;
 
 import com.alibaba.nacos.api.common.Constants;
 import com.alibaba.nacos.auth.model.User;
-import org.apache.commons.lang3.StringUtils;
+import com.alibaba.nacos.common.utils.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -74,7 +74,7 @@ public class RequestUtil {
      * @return may be return null
      */
     public static User getUser(HttpServletRequest request) {
-        Object userObj = request.getAttribute(NACOS_USER_KEY);
+        Object userObj = request.getSession().getAttribute(NACOS_USER_KEY);
         if (userObj == null) {
             return null;
         }
