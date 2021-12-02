@@ -95,7 +95,7 @@ public class HttpRequestInstanceBuilder {
     
     private void setAttributesToBuilder(HttpServletRequest request) throws NacosException {
         actualBuilder.setServiceName(WebUtils.required(request, CommonParams.SERVICE_NAME));
-        actualBuilder.setIp(WebUtils.required(request, "ip"));//曹明杰 准备修改 ，新增ip 校验。
+        actualBuilder.setIp(WebUtils.required(request, "ip"));
         actualBuilder.setPort(Integer.parseInt(WebUtils.required(request, "port")));
         actualBuilder.setHealthy(ConvertUtils.toBoolean(WebUtils.optional(request, "healthy", "true")));
         actualBuilder.setEphemeral(ConvertUtils
