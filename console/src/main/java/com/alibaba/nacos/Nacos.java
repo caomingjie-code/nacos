@@ -16,6 +16,7 @@
 
 package com.alibaba.nacos;
 
+import com.alibaba.nacos.sys.env.EnvUtil;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.ServletComponentScan;
@@ -35,6 +36,7 @@ public class Nacos {
      * @param args
      */
     public static void main(String[] args) {
+        EnvUtil.setNacosHomePath("./distribution/node3");
         SpringApplication.run(Nacos.class, args);
     }
 }

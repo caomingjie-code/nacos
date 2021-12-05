@@ -20,6 +20,7 @@ import com.alibaba.nacos.api.grpc.auto.Payload;
 import com.alibaba.nacos.common.remote.ConnectionType;
 import com.alibaba.nacos.common.utils.ReflectUtils;
 import com.alibaba.nacos.common.utils.StringUtils;
+import com.alibaba.nacos.core.listener.StartingApplicationListener;
 import com.alibaba.nacos.core.remote.BaseRpcServer;
 import com.alibaba.nacos.core.remote.ConnectionManager;
 import com.alibaba.nacos.core.utils.Loggers;
@@ -44,6 +45,8 @@ import io.grpc.netty.shaded.io.netty.channel.Channel;
 import io.grpc.protobuf.ProtoUtils;
 import io.grpc.stub.ServerCalls;
 import io.grpc.util.MutableHandlerRegistry;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.net.InetSocketAddress;
@@ -56,7 +59,7 @@ import java.util.concurrent.ThreadPoolExecutor;
  * @version $Id: BaseGrpcServer.java, v 0.1 2020年07月13日 3:42 PM liuzunfei Exp $
  */
 public abstract class BaseGrpcServer extends BaseRpcServer {
-    
+    private static final Logger LOGGER = LoggerFactory.getLogger(BaseGrpcServer.class);
     private Server server;
     
     private static final String REQUEST_BI_STREAM_SERVICE_NAME = "BiRequestStream";
@@ -148,7 +151,7 @@ public abstract class BaseGrpcServer extends BaseRpcServer {
                         }
                     }
                 }).build();
-        
+        System.out.println("start server : "+server);
         server.start();
     }
     
