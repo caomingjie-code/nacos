@@ -30,7 +30,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 @Service
 public class GrpcClusterServer extends BaseGrpcServer {
     
-    private static final int PORT_OFFSET = 1100;
+    private static final int PORT_OFFSET = 1001;
     
     @Override
     public int rpcPortOffset() {

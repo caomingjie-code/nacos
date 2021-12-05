@@ -24,6 +24,7 @@ import com.alibaba.nacos.core.listener.StartingApplicationListener;
 import com.alibaba.nacos.core.remote.BaseRpcServer;
 import com.alibaba.nacos.core.remote.ConnectionManager;
 import com.alibaba.nacos.core.utils.Loggers;
+import com.alibaba.nacos.sys.env.EnvUtil;
 import io.grpc.Attributes;
 import io.grpc.CompressorRegistry;
 import io.grpc.Context;
@@ -50,6 +51,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.net.InetSocketAddress;
+import java.net.ServerSocket;
 import java.util.concurrent.ThreadPoolExecutor;
 
 /**
@@ -73,7 +75,9 @@ public abstract class BaseGrpcServer extends BaseRpcServer {
     private static final String GRPC_MAX_INBOUND_MSG_SIZE_PROPERTY = "nacos.remote.server.grpc.maxinbound.message.size";
     
     private static final long DEFAULT_GRPC_MAX_INBOUND_MSG_SIZE = 10 * 1024 * 1024;
-    
+
+    private int port = -1;
+
     @Autowired
     private GrpcRequestAcceptor grpcCommonRequestAcceptor;
     
@@ -87,7 +91,26 @@ public abstract class BaseGrpcServer extends BaseRpcServer {
     public ConnectionType getConnectionType() {
         return ConnectionType.GRPC;
     }
-    
+
+    @Override
+    public int getServicePort() {
+        try {
+            if (port == -1) {
+                synchronized (this) {
+                    if (port == -1) {
+                        // 0 to use a port number that is automatically allocated.
+                        ServerSocket socket = new ServerSocket(0);
+                        port = socket.getLocalPort();
+                        socket.close();
+                    }
+                }
+            }
+            return port;
+        } catch (Exception e) {
+        }
+        return EnvUtil.getPort() + rpcPortOffset();
+    }
+
     @Override
     public void startServer() throws Exception {
         final MutableHandlerRegistry handlerRegistry = new MutableHandlerRegistry();

@@ -24,6 +24,7 @@ import com.alibaba.nacos.sys.env.EnvUtil;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import java.net.ServerSocket;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * abstract rpc server .
@@ -36,7 +37,7 @@ public abstract class BaseRpcServer {
     static {
         PayloadRegistry.init();
     }
-    
+
     /**
      * Start sever.
      */
@@ -89,17 +90,9 @@ public abstract class BaseRpcServer {
      *
      * @return service port.
      */
-    public int getServicePort() {
+    public abstract int getServicePort() ;
 
-        try {
-            ServerSocket socket = new ServerSocket(0);
-            int localPort = socket.getLocalPort();
-            socket.close();
-            return localPort;
-        }catch (Exception e){}
-        return EnvUtil.getPort() + rpcPortOffset();
-    }
-    
+
     /**
      * Stop Server.
      *

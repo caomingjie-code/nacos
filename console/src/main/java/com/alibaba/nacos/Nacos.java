@@ -36,7 +36,7 @@ public class Nacos {
      * @param args
      */
     public static void main(String[] args) {
-        EnvUtil.setNacosHomePath("./distribution/node3");
+        EnvUtil.setNacosHomePath("./distribution/node2");
         SpringApplication.run(Nacos.class, args);
     }
 }
