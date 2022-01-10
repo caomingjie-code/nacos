@@ -90,8 +90,9 @@ public abstract class BaseRpcServer {
      *
      * @return service port.
      */
-    public abstract int getServicePort() ;
-
+    public int getServicePort() {
+        return EnvUtil.getPort() + rpcPortOffset();
+    }
 
     /**
      * Stop Server.

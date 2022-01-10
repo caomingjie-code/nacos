@@ -102,6 +102,7 @@ public abstract class BaseGrpcServer extends BaseRpcServer {
                         ServerSocket socket = new ServerSocket(0);
                         port = socket.getLocalPort();
                         socket.close();
+                        System.out.println(this.getClass().getName()+" -> getServicePort : "+port);
                     }
                 }
             }
