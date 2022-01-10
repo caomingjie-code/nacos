@@ -55,7 +55,7 @@ const authorityControlMenu = {
 };
 
 /**
- * 集群管理
+ * 集群管理。
  */
 const clusterManagementVirtual = {
   key: 'clusterManagementVirtual',
