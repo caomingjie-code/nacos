@@ -57,9 +57,15 @@ import java.util.concurrent.TimeUnit;
 public abstract class GrpcClient extends RpcClient {
     
     static final Logger LOGGER = LoggerFactory.getLogger(GrpcClient.class);
-    
+
+    public static final String GRPC_SERVER_SDK_PORT = "nacos.server.grpc.sdk.port";
+
+    public static final String GRPC_SERVER_CLUSTER_PORT = "nacos.server.grpc.cluster.port";
+
+    public static final String GRPC_SERVER_DEFAULT_USELESS_PORT = "-1";
+
     protected static final String NACOS_SERVER_GRPC_PORT_OFFSET_KEY = "nacos.server.grpc.port.offset";
-    
+
     private ThreadPoolExecutor grpcExecutor = null;
     
     private static final long DEFAULT_MAX_INBOUND_MESSAGE_SIZE = 10 * 1024 * 1024L;
@@ -119,7 +125,14 @@ public abstract class GrpcClient extends RpcClient {
                 .getProperty("nacos.remote.grpc.keep.alive.millis", String.valueOf(DEFAULT_KEEP_ALIVE_TIME));
         return Integer.parseInt(keepAliveTimeMillis);
     }
-    
+
+    /**
+     * increase offset of the nacos server port for the rpc server port.
+     *
+     * @return rpc port offset
+     */
+    public abstract int rpcPortOffset(ServerInfo serverInfo);
+
     /**
      * shutdown a  channel.
      *
@@ -257,7 +270,7 @@ public abstract class GrpcClient extends RpcClient {
                 grpcExecutor.allowCoreThreadTimeOut(true);
                 
             }
-            int port = serverInfo.getServerPort() + rpcPortOffset();
+            int port = serverInfo.getServerPort() + rpcPortOffset(serverInfo);
             RequestGrpc.RequestFutureStub newChannelStubTemp = createNewChannelStub(serverInfo.getServerIp(), port);
             if (newChannelStubTemp != null) {
                 

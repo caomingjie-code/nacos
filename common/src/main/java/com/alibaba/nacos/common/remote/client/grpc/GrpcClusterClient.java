@@ -40,5 +40,13 @@ public class GrpcClusterClient extends GrpcClient {
         return Integer.parseInt(System.getProperty(
                 NACOS_SERVER_GRPC_PORT_OFFSET_KEY, NACOS_SERVER_CLUSTER_GRPC_PORT_DEFAULT_OFFSET));
     }
+
+    public int rpcPortOffset(ServerInfo serverInfo){
+        int grpcClusterPort = Integer.parseInt(System.getProperty(GRPC_SERVER_CLUSTER_PORT, GRPC_SERVER_DEFAULT_USELESS_PORT));
+        if(grpcClusterPort == -1){
+            grpcClusterPort = rpcPortOffset();
+        }
+        return grpcClusterPort;
+    }
     
 }

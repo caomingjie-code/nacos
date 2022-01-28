@@ -17,6 +17,7 @@
 package com.alibaba.nacos.sys.env;
 
 import com.alibaba.nacos.common.JustForTest;
+import com.alibaba.nacos.common.remote.client.grpc.GrpcClient;
 import com.alibaba.nacos.common.utils.IoUtils;
 import com.alibaba.nacos.common.utils.StringUtils;
 import com.alibaba.nacos.common.utils.ThreadUtils;
@@ -76,6 +77,10 @@ public class EnvUtil {
     private static final String FILE_PREFIX = "file:";
     
     private static final String SERVER_PORT_PROPERTY = "server.port";
+
+    private static final String GRPC_SDK_PORT = GrpcClient.GRPC_SERVER_SDK_PORT;
+
+    private static final String GRPC_CLUSTER_PORT = GrpcClient.GRPC_SERVER_CLUSTER_PORT;
     
     private static final int DEFAULT_SERVER_PORT = 8848;
     
@@ -459,5 +464,21 @@ public class EnvUtil {
         double result = getProperty(Constants.AVAILABLE_PROCESSORS_BASIC, int.class,
                 ThreadUtils.getSuitableThreadCount(1)) * scale;
         return result > 1 ? (int) result : 1;
+    }
+
+    /**
+     * Get a grpc sdk port from environment
+     * @return -1 if  grpc sdk port is null.
+     */
+    public static int getGrpcSdkPort(){
+        return getProperty(GRPC_SDK_PORT,Integer.class, -1);
+    }
+
+    /**
+     * get a grpc sdk port from environment
+     * @return -1 if  grpc cluster port is null.
+     */
+    public static int getGrpcClusterPort(){
+        return getProperty(GRPC_CLUSTER_PORT,Integer.class, -1);
     }
 }

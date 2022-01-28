@@ -17,6 +17,7 @@
 package com.alibaba.nacos.core.remote.grpc;
 
 import com.alibaba.nacos.core.utils.GlobalExecutor;
+import com.alibaba.nacos.sys.env.EnvUtil;
 import org.springframework.stereotype.Service;
 
 import java.util.concurrent.ThreadPoolExecutor;
@@ -34,6 +35,10 @@ public class GrpcClusterServer extends BaseGrpcServer {
     
     @Override
     public int rpcPortOffset() {
+        int grpcClusterPort = EnvUtil.getGrpcClusterPort();
+        if(grpcClusterPort != -1){
+            return grpcClusterPort - EnvUtil.getPort();
+        }
         return PORT_OFFSET;
     }
     
