@@ -31,6 +31,9 @@ import java.util.concurrent.TimeUnit;
 /**
  * Switch domain.
  *
+ * 记录nacos服务的基础服务信息.比如
+ * 心跳间隔时间. 检查次数. 健康参数, 服务状态同步的速度.
+ *
  * @author nacos
  */
 @Component

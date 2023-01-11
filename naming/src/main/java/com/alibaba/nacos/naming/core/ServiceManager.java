@@ -445,7 +445,7 @@ public class ServiceManager implements RecordListener<Service> {
      */
     public void createServiceIfAbsent(String namespaceId, String serviceName, boolean local, Cluster cluster)
             throws NacosException {
-        Service service = getService(namespaceId, serviceName);
+        Service service = getService(namespaceId, serviceName);//查找命名空间和+服务名(group@@spring.application.name)
         if (service == null) {
             
             Loggers.SRV_LOG.info("creating empty service {}:{}", namespaceId, serviceName);
@@ -630,7 +630,7 @@ public class ServiceManager implements RecordListener<Service> {
      */
     public void addInstance(String namespaceId, String serviceName, boolean ephemeral, Instance... ips)
             throws NacosException {
-        
+        //ephemeral.namespaceId + group + spring.application.name
         String key = KeyBuilder.buildInstanceListKey(namespaceId, serviceName, ephemeral);
         
         Service service = getService(namespaceId, serviceName);
@@ -771,7 +771,7 @@ public class ServiceManager implements RecordListener<Service> {
         List<Instance> currentIPs = service.allIPs(ephemeral);
         Map<String, Instance> currentInstances = new HashMap<>(currentIPs.size());
         Set<String> currentInstanceIds = CollectionUtils.set();
-        
+        // instance 这里指客户端十六
         for (Instance instance : currentIPs) {
             currentInstances.put(instance.toIpAddr(), instance);
             currentInstanceIds.add(instance.getInstanceId());
@@ -779,6 +779,7 @@ public class ServiceManager implements RecordListener<Service> {
         
         Map<String, Instance> instanceMap;
         if (datum != null && null != datum.value) {
+            //更新旧实例的信息: 健康状态,最后一次心跳时间
             instanceMap = setValid(((Instances) datum.value).getInstanceList(), currentInstances);
         } else {
             instanceMap = new HashMap<>(ips.length);

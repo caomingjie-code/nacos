@@ -69,7 +69,9 @@ import static com.alibaba.nacos.naming.misc.UtilsAndCommons.DEFAULT_CLUSTER_NAME
 
 /**
  * Instance operation controller.
- *
+ * /nacos/v1/ns/instance
+ * 该类主要提供服务注入功能入口. 通过nacos-client中的NamingHttpClientProxy .
+ * 底版本为com.alibaba.nacos.client.naming.net.NamingProxy (高版本中已经删除. 注意并不是misc包中的).
  * @author nkorange
  */
 @RestController
@@ -95,7 +97,7 @@ public class InstanceController {
     
     /**
      * Register new instance.
-     *
+     * 注册实例接口.
      * @param request http request
      * @return 'ok' if success
      * @throws Exception any error during register
@@ -104,12 +106,15 @@ public class InstanceController {
     @PostMapping
     @Secured(parser = NamingResourceParser.class, action = ActionTypes.WRITE)
     public String register(HttpServletRequest request) throws Exception {
-        
+        //获取命名空间
         final String namespaceId = WebUtils
                 .optional(request, CommonParams.NAMESPACE_ID, Constants.DEFAULT_NAMESPACE_ID);
+        //获取服务名称: 格式为: group@@serviceName
         final String serviceName = WebUtils.required(request, CommonParams.SERVICE_NAME);
+        //校验服务名称格式. 格式必须为group@@serviceName
         NamingUtils.checkServiceNameFormat(serviceName);
-        
+
+        //
         final Instance instance = HttpRequestInstanceBuilder.newBuilder()
                 .setDefaultInstanceEphemeral(switchDomain.isDefaultInstanceEphemeral()).setRequest(request).build();
         

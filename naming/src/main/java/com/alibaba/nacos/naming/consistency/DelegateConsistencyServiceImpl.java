@@ -101,7 +101,7 @@ public class DelegateConsistencyServiceImpl implements ConsistencyService {
         }
         return Optional.ofNullable(errorMsg);
     }
-    
+    //选着临时序列化储存 , 还是永久序列化储存
     private ConsistencyService mapConsistencyService(String key) {
         return KeyBuilder.matchEphemeralKey(key) ? ephemeralConsistencyService : persistentConsistencyService;
     }

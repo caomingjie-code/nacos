@@ -365,7 +365,7 @@ public class InstanceOperatorServiceImpl implements InstanceOperator {
         };
         return serviceManager.batchOperate(namespace, instanceOperationInfo, operateFunction);
     }
-    
+    //转化为底版本的数据结构
     private com.alibaba.nacos.naming.core.Instance parseInstance(Instance apiInstance) throws NacosException {
         com.alibaba.nacos.naming.core.Instance result = instanceUpgradeHelper.toV1(apiInstance);
         result.setApp(apiInstance.getMetadata().getOrDefault("app", "DEFAULT"));
