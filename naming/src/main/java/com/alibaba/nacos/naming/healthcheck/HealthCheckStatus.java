@@ -33,15 +33,15 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class HealthCheckStatus implements Serializable {
     
     private static final long serialVersionUID = -5791320072773064978L;
-    
+    //是否正在检查
     public AtomicBoolean isBeingChecked = new AtomicBoolean(false);
-    
+    //检查失败的次数
     public AtomicInteger checkFailCount = new AtomicInteger(0);
-    
+    //检查成功的次数
     public AtomicInteger checkOkCount = new AtomicInteger(0);
     
     public long checkRt = -1L;
-    
+    //内存中存放
     private static ConcurrentMap<String, HealthCheckStatus> statusMap = new ConcurrentHashMap<>();
     
     public static void reset(Instance instance) {
@@ -73,7 +73,7 @@ public class HealthCheckStatus implements Serializable {
             
             String clusterName = instance.getClusterName();
             String serviceName = instance.getServiceName();
-            String datumKey = instance.getDatumKey();
+            String datumKey = instance.getDatumKey();//格式为: ip + [port] + unknown + clusterName
             return serviceName + ":" + clusterName + ":" + datumKey;
         } catch (Throwable e) {
             Loggers.SRV_LOG.error("[BUILD-KEY] Exception while set rt, ip {}, error: {}", instance.toJson(), e);

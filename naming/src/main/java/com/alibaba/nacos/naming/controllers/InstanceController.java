@@ -114,10 +114,10 @@ public class InstanceController {
         //校验服务名称格式. 格式必须为group@@serviceName
         NamingUtils.checkServiceNameFormat(serviceName);
 
-        //
+        //封装注册的实例信息
         final Instance instance = HttpRequestInstanceBuilder.newBuilder()
                 .setDefaultInstanceEphemeral(switchDomain.isDefaultInstanceEphemeral()).setRequest(request).build();
-        
+        //获取实例服务(包含v1,v2)进行注册实例
         getInstanceOperator().registerInstance(namespaceId, serviceName, instance);
         return "ok";
     }

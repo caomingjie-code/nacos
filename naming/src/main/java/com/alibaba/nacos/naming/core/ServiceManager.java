@@ -446,7 +446,7 @@ public class ServiceManager implements RecordListener<Service> {
     public void createServiceIfAbsent(String namespaceId, String serviceName, boolean local, Cluster cluster)
             throws NacosException {
         Service service = getService(namespaceId, serviceName);//查找命名空间和+服务名(group@@spring.application.name)
-        if (service == null) {
+        if (service == null) {//不存在则创建一个新的服务
             
             Loggers.SRV_LOG.info("creating empty service {}:{}", namespaceId, serviceName);
             service = new Service();
@@ -455,12 +455,12 @@ public class ServiceManager implements RecordListener<Service> {
             service.setGroupName(NamingUtils.getGroupName(serviceName));
             // now validate the service. if failed, exception will be thrown
             service.setLastModifiedMillis(System.currentTimeMillis());
-            service.recalculateChecksum();
+            service.recalculateChecksum();//计算一下md5的值
             if (cluster != null) {
                 cluster.setService(service);
                 service.getClusterMap().put(cluster.getName(), cluster);
             }
-            service.validate();
+            service.validate();//这里的校验主要是校验服务的名称格式
             
             putServiceAndInit(service);
             if (!local) {
@@ -771,7 +771,7 @@ public class ServiceManager implements RecordListener<Service> {
         List<Instance> currentIPs = service.allIPs(ephemeral);
         Map<String, Instance> currentInstances = new HashMap<>(currentIPs.size());
         Set<String> currentInstanceIds = CollectionUtils.set();
-        // instance 这里指客户端十六
+        // instance 这里指客户端实例
         for (Instance instance : currentIPs) {
             currentInstances.put(instance.toIpAddr(), instance);
             currentInstanceIds.add(instance.getInstanceId());
@@ -865,8 +865,8 @@ public class ServiceManager implements RecordListener<Service> {
     }
     
     private void putServiceAndInit(Service service) throws NacosException {
-        putService(service);
-        service = getService(service.getNamespaceId(), service.getName());
+        putService(service);//存放: 命名空间 -> 服务
+        service = getService(service.getNamespaceId(), service.getName());//然后在获取对应的服务. 这里这样处理为了避免并发情况service不一致问题. 我们以存入map中的service为准.
         service.init();
         consistencyService
                 .listen(KeyBuilder.buildInstanceListKey(service.getNamespaceId(), service.getName(), true), service);

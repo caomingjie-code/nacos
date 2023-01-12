@@ -177,7 +177,8 @@ public class Service extends com.alibaba.nacos.api.naming.pojo.Service implement
     public void onChange(String key, Instances value) throws Exception {
         
         Loggers.SRV_LOG.info("[NACOS-RAFT] datum is changed, key: {}, value: {}", key, value);
-        
+
+        //调整一下权重
         for (Instance instance : value.getInstanceList()) {
             
             if (instance == null) {
@@ -238,7 +239,7 @@ public class Service extends com.alibaba.nacos.api.naming.pojo.Service implement
         for (String clusterName : clusterMap.keySet()) {
             ipMap.put(clusterName, new ArrayList<>());
         }
-        
+        //这个for循环时将对应的实例放入到对应的集群中. 由客户端spring.cloud.nacos.discovery.cluster-name 定义
         for (Instance instance : instances) {
             try {
                 if (instance == null) {
@@ -274,10 +275,10 @@ public class Service extends com.alibaba.nacos.api.naming.pojo.Service implement
         for (Map.Entry<String, List<Instance>> entry : ipMap.entrySet()) {
             //make every ip mine
             List<Instance> entryIPs = entry.getValue();
-            clusterMap.get(entry.getKey()).updateIps(entryIPs, ephemeral);
+            clusterMap.get(entry.getKey()).updateIps(entryIPs, ephemeral);//更新对应集群(Cluster)对象中的实例(Instance)对象
         }
         
-        setLastModifiedMillis(System.currentTimeMillis());
+        setLastModifiedMillis(System.currentTimeMillis());//给服务Service设置最后的更新时间
         getPushService().serviceChanged(this);
         ApplicationUtils.getBean(DoubleWriteEventListener.class).doubleWriteToV2(this, ephemeral);
         StringBuilder stringBuilder = new StringBuilder();

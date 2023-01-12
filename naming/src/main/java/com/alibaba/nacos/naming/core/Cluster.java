@@ -236,9 +236,9 @@ public class Cluster extends com.alibaba.nacos.api.naming.pojo.Cluster implement
      * @param ephemeral whether these instances are ephemeral
      */
     public void updateIps(List<Instance> ips, boolean ephemeral) {
-        
+        //获取临时的还是永久的实例
         Set<Instance> toUpdateInstances = ephemeral ? ephemeralInstances : persistentInstances;
-        
+        //将旧的实例进行 key->instance 映射关联
         HashMap<String, Instance> oldIpMap = new HashMap<>(toUpdateInstances.size());
         
         for (Instance ip : toUpdateInstances) {
@@ -269,7 +269,7 @@ public class Cluster extends com.alibaba.nacos.api.naming.pojo.Cluster implement
                 }
             }
         }
-        
+        //将新ips中排除旧的实例. 返回新的实例(在旧的中不存在的).
         List<Instance> newIPs = subtract(ips, oldIpMap.values());
         if (newIPs.size() > 0) {
             Loggers.EVT_LOG
@@ -277,10 +277,10 @@ public class Cluster extends com.alibaba.nacos.api.naming.pojo.Cluster implement
                             getName(), newIPs.size(), newIPs);
             
             for (Instance ip : newIPs) {
-                HealthCheckStatus.reset(ip);
+                HealthCheckStatus.reset(ip);//给新实例映射一个新状态对象(初始化一个状态对象)
             }
         }
-        
+        //将旧ip中排除新的ip. 将旧的ip移除健康检查状态.
         List<Instance> deadIPs = subtract(oldIpMap.values(), ips);
         
         if (deadIPs.size() > 0) {
@@ -292,7 +292,7 @@ public class Cluster extends com.alibaba.nacos.api.naming.pojo.Cluster implement
                 HealthCheckStatus.remv(ip);
             }
         }
-        
+        //利用HashSet去重(也算是一种转换,带有去重的特点). 然后更新临时实例/永久实例
         toUpdateInstances = new HashSet<>(ips);
         
         if (ephemeral) {
@@ -303,7 +303,7 @@ public class Cluster extends com.alibaba.nacos.api.naming.pojo.Cluster implement
     }
     
     private List<Instance> updatedIps(Collection<Instance> newInstance, Collection<Instance> oldInstance) {
-        
+        //返回交集
         List<Instance> intersects = (List<Instance>) CollectionUtils.intersection(newInstance, oldInstance);
         Map<String, Instance> stringIpAddressMap = new ConcurrentHashMap<>(intersects.size());
         
